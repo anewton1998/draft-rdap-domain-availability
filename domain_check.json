@@ -1,0 +1,6 @@
+{
+  "rdapConformance" : [ "rdap_level_0", "domain_check_0" ],
+  "objectClassName" : "domain",
+  "ldhName" : "example.com",
+  "status" : [ "inactive", "redemption period" ]
+}

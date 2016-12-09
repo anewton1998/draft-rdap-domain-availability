@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rfc SYSTEM "http://xml.resource.org/authoring/rfc2629.dtd"
+[
+<!ENTITY RFC7480 PUBLIC ''
+   'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7480.xml'>
+<!ENTITY RFC7483 PUBLIC ''
+   'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7483.xml'>
+<!ENTITY domain_check.json PUBLIC '' 'domain_check.json' >
+<!ENTITY variant_domain.json PUBLIC '' 'variant_domain.json' >
+]>
+<?rfc toc="true"?>
+<rfc category="info" docName="draft-newton-regext-rdap-domain-availability-00" ipr="trust200902">
+    <front>
+        <title abbrev="RDAP Domain Availability">Using RDAP as a Domain Availability Service</title>
+        <author fullname="Andrew Lee Newton" initials="A.L." surname="Newton">
+            <organization abbrev="ARIN">American Registry for Internet Numbers</organization>
+            <address>
+                <postal>
+                    <street>PO Box 232290</street>
+                    <city>Centreville</city>
+                    <region>VA</region>
+                    <country>US</country>
+                    <code>20120</code>
+                </postal>
+                <email>andy@arin.net</email>
+                <uri>http://www.arin.net</uri>
+            </address>
+        </author>
+        <date/>
+        <abstract>
+            <t>
+                This document describes a minimal profile of RDAP which can be used to check
+                the availability of domain names available for registration.
+            </t>
+        </abstract>
+    </front>
+    <middle>
+        <section title="Introduction">
+            <t>
+                While RDAP <xref target="RFC7480"></xref> has all the necessary properties to serve the information necessary
+                to determine if a domain name is available for registration, without proper signalling
+                an RDAP server is likely to return more information than is required to fulfill this
+                requirement, thus wasting bandwidth and server resources, and may return negative answers when postive answers 
+                are more appropriate.
+            </t>            
+            <t>
+                This document defines a HTTP query parameters to be used by clients to signal the
+                intent of the query is for an availability check. Servers may then respond with
+                a much smaller and less costly payload than they would have otherwise. The contents
+                of the payload would be at the descretion of the policies of the server operator within
+                the guidelines of RDAP responses <xref target="RFC7483"></xref>.
+            </t>
+        </section>
+        <section title="Query Parameter" anchor="query_parameter">
+            <t>
+                To signal that the client is only interested in domain availability information,
+                the client MUST use the query paramter 'availabilityCheck' in the RDAP query for
+                a domain. This query parameter has no meaning for other RDAP queries, and therefore
+                should be ignored.
+            </t>
+            <figure align="center" title="Example RDAP Query" anchor="example_query">
+                <preamble>The following is an example RDAP query for a domain availability check.</preamble>
+                <artwork xml:space="preserve" align="center">https://example.com/rdap/domain/example.com?availabilityCheck</artwork>
+            </figure>
+            <figure align="center" title="Example RDAP Response" anchor="domain_check.json">
+                <preamble>The following is an example response.</preamble>
+                <artwork xml:space="preserve" align="center">&domain_check.json;
+                </artwork>
+                <postamble>This response, not including the HTTP headers, is 174 octets.</postamble>
+            </figure>
+            <t>
+                When this query paramter is given, severs MUST reply with HTTP return codes as specified
+                in <xref target="answers"></xref>.
+            </t>
+        </section>
+        <section title="Positive and Negative Answers" anchor="answers">
+            <t>
+                RDAP <xref target="RFC7480"></xref> provides guidance on using HTTP return codes more
+                contextual for the lookup of domain registration information than domain availability information.
+                A query for domain registration information should result in a negative answer (e.g. 404 NOT FOUND) if
+                the name is not registered (or not in active use or in another state where it may be considered to
+                have a unregistration acording to policy). However, a query for domain availability information
+                upon the same domain name should yield a positive answer if the domain is available for registration
+                within the bounds of the registry policy.
+                In other words, the return codes may vary given the appropriate context.
+            </t>
+            <t>
+                In the context of domain availability, RDAP servers should return positive answers in accordance with
+                server policies for rate limiting and access control if the domain
+                registry for which the RDAP server is responding allows registration of the queried domain even
+                if the domain is currently registered at the time of the query. For example, an RDAP server answering for foo.example
+                would return a positive answer (i.e. 200 OK) for fiz.foo.example if the domain status was active or inactive,
+                but it would return a negative answer for buzz.bar.example because it is not the registry for bar.example.
+            </t>
+            <figure align="center" title="Example Positive Answer" anchor="variant_domain.json">
+                <preamble>The example in <xref target="domain_check.json"> shows a positive answer for
+                a domain that is inactive (i.e. not registered). This example shows a positive answer for
+                a domain that is active, including variants and the expiration date.</xref></preamble>
+                <artwork xml:space="preserve" align="center">&variant_domain.json;
+                </artwork>
+                <postamble>This response, not including the HTTP headers, is 904 octets.</postamble>
+            </figure>
+        </section>
+        <section title="Availability Information Query" anchor="availability_query">
+            <t>
+                All of the examples given in this document have been reduced from examples in <xref target="RFC7483"></xref>,
+                demonstrating that domain availability information is a subset of domain registration information in the
+                RDAP data model.
+                Some clients may desire both domain registration information and domain availability information.
+                To signal that the client is interested in both contexts,
+                the client MUST use the query paramter 'availabilityInformation' in the RDAP query for
+                a domain. This query parameter has no meaning for other RDAP queries, and therefore
+                should be ignored.
+            </t>
+            <t>
+                Severs MUST respond with positive answers as specified in <xref target="answers"></xref>, but
+                SHOULD NOT redact other registration information (i.e. entities, name servers, etc...) in accordance
+                with their access policies.
+            </t>
+        </section>
+        <section title="RDAP Conformance">
+            <t>
+                Servers MUST include "domain_check_0" in the rdapConformance array of their response when
+                modifying their behavior according to this specification. That is, this value should only
+                be placed in the array when responding to a query with one of the query parameters in
+                <xref target="query_parameter"></xref> or <xref target="availability_query"></xref>.
+            </t>
+        </section>
+    </middle>
+    <back>
+        <references title="Normative References">
+            
+            &RFC7480;
+            &RFC7483;
+            
+        </references>
+    </back>
+</rfc>
