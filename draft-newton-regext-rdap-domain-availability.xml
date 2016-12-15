@@ -26,6 +26,19 @@
                 <uri>http://www.arin.net</uri>
             </address>
         </author>
+        <author fullname="Marcos Sanz" initials="M." surname="Sanz">
+            <organization abbrev="DENIC eG">DENIC eG</organization>
+            <address>
+                <postal>
+                    <street>Kaiserstraße 75 - 77</street>
+                    <code>60329</code>
+                    <city>Frankfurt am Main</city>
+                    <country>Germany</country>
+                </postal>
+                <email>sanz@denic.de</email>
+                <uri>https://www.denic.de</uri>
+            </address>
+        </author>
         <date/>
         <abstract>
             <t>
@@ -40,36 +53,36 @@
                 While RDAP <xref target="RFC7480"></xref> has all the necessary properties to serve the information necessary
                 to determine if a domain name is available for registration, without proper signalling
                 an RDAP server is likely to return more information than is required to fulfill this
-                requirement, thus wasting bandwidth and server resources, and may return negative answers when postive answers 
+                requirement, thus wasting bandwidth and server resources, and may return negative answers when positive answers 
                 are more appropriate.
             </t>            
             <t>
-                This document defines a HTTP query parameters to be used by clients to signal the
+                This document defines HTTP query parameters to be used by clients to signal the
                 intent of the query is for an availability check. Servers may then respond with
                 a much smaller and less costly payload than they would have otherwise. The contents
-                of the payload would be at the descretion of the policies of the server operator within
+                of the payload would be at the discretion of the policies of the server operator within
                 the guidelines of RDAP responses <xref target="RFC7483"></xref>.
             </t>
         </section>
         <section title="Query Parameter" anchor="query_parameter">
             <t>
-                To signal that the client is only interested in domain availability information,
-                the client MUST use the query paramter 'availabilityCheck' in the RDAP query for
-                a domain. This query parameter has no meaning for other RDAP queries, and therefore
-                should be ignored.
+                To signal that the client is only interested in domain availability checking,
+                the client MUST use the query parameter 'availabilityCheck' in the RDAP query for
+                a domain with value '1'. This query parameter has no meaning for other RDAP queries, and therefore
+                should be ignored in those cases.
             </t>
             <figure align="center" title="Example RDAP Query" anchor="example_query">
                 <preamble>The following is an example RDAP query for a domain availability check.</preamble>
-                <artwork xml:space="preserve" align="center">https://example.com/rdap/domain/example.com?availabilityCheck</artwork>
+                <artwork xml:space="preserve" align="center">https://example.com/rdap/domain/example.com?availabilityCheck=1</artwork>
             </figure>
             <figure align="center" title="Example RDAP Response" anchor="domain_check.json">
                 <preamble>The following is an example response.</preamble>
                 <artwork xml:space="preserve" align="center">&domain_check.json;
                 </artwork>
-                <postamble>This response, not including the HTTP headers, is 174 octets.</postamble>
+                <postamble>This response, not including the HTTP headers, is 174 octets long.</postamble>
             </figure>
             <t>
-                When this query paramter is given, severs MUST reply with HTTP return codes as specified
+                When this query parameter is given, servers MUST reply with HTTP return codes as specified
                 in <xref target="answers"></xref>.
             </t>
         </section>
@@ -85,20 +98,20 @@
                 In other words, the return codes may vary given the appropriate context.
             </t>
             <t>
-                In the context of domain availability, RDAP servers should return positive answers in accordance with
-                server policies for rate limiting and access control if the domain
+                In the context of domain availability, RDAP servers should return positive answers (in accordance with
+                server policies for rate limiting and access control) if the domain
                 registry for which the RDAP server is responding allows registration of the queried domain even
                 if the domain is currently registered at the time of the query. For example, an RDAP server answering for foo.example
                 would return a positive answer (i.e. 200 OK) for fiz.foo.example if the domain status was active or inactive,
                 but it would return a negative answer for buzz.bar.example because it is not the registry for bar.example.
             </t>
             <figure align="center" title="Example Positive Answer" anchor="variant_domain.json">
-                <preamble>The example in <xref target="domain_check.json"> shows a positive answer for
+                <preamble>The example in <xref target="domain_check.json"></xref> shows a positive answer for
                 a domain that is inactive (i.e. not registered). This example shows a positive answer for
-                a domain that is active, including variants and the expiration date.</xref></preamble>
+                a domain that is active, including variants and the expiration date.</preamble>
                 <artwork xml:space="preserve" align="center">&variant_domain.json;
                 </artwork>
-                <postamble>This response, not including the HTTP headers, is 904 octets.</postamble>
+                <postamble>This response, not including the HTTP headers, is 908 octets long in UTF-8 encoding.</postamble>
             </figure>
         </section>
         <section title="Availability Information Query" anchor="availability_query">
@@ -108,12 +121,12 @@
                 RDAP data model.
                 Some clients may desire both domain registration information and domain availability information.
                 To signal that the client is interested in both contexts,
-                the client MUST use the query paramter 'availabilityInformation' in the RDAP query for
-                a domain. This query parameter has no meaning for other RDAP queries, and therefore
-                should be ignored.
+                the client MUST use the query parameter 'availabilityInformation' in the RDAP query for
+                a domain with value '1'. This query parameter has no meaning for other RDAP queries, and therefore
+                should be ignored in those cases.
             </t>
             <t>
-                Severs MUST respond with positive answers as specified in <xref target="answers"></xref>, but
+                Servers MUST respond with positive answers as specified in <xref target="answers"></xref>, but
                 SHOULD NOT redact other registration information (i.e. entities, name servers, etc...) in accordance
                 with their access policies.
             </t>

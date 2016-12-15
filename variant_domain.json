@@ -3,7 +3,7 @@
   "objectClassName" : "domain",
   "handle" : "XXXX",
   "ldhName" : "xn--fo-5ja.example",
-  "unicodeName" : "foo.example",
+  "unicodeName" : "fóo.example",
   "variants" :
   [
     {
@@ -12,11 +12,11 @@
       [
         {
           "ldhName" : "xn--fo-cka.example",
-          "unicodeName" : "foo.example"
+          "unicodeName" : "fõo.example"
         },
         {
           "ldhName" : "xn--fo-fka.example",
-          "unicodeName" : "foo.example"
+          "unicodeName" : "föo.example"
         }
       ]
     },
@@ -26,7 +26,7 @@
       [
         {
           "ldhName": "xn--fo-8ja.example",
-          "unicodeName" : "foo.example"
+          "unicodeName" : "fôo.example"
         }
       ]
     }
@@ -36,7 +36,7 @@
   [
     {
       "eventAction" : "expiration",
-      "eventDate" : "2019-12-31T23:59:59Z",
+      "eventDate" : "2019-12-31T23:59:59Z"
     }
   ]
 }

@@ -4,8 +4,9 @@
 
 Network Working Group                                          A. Newton
 Internet-Draft                                                      ARIN
-Intended status: Informational                          December 7, 2016
-Expires: June 10, 2017
+Intended status: Informational                                   M. Sanz
+Expires: June 18, 2017                                          DENIC eG
+                                                       December 15, 2016
 
 
               Using RDAP as a Domain Availability Service
@@ -31,7 +32,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 10, 2017.
+   This Internet-Draft will expire on June 18, 2017.
 
 Copyright Notice
 
@@ -52,8 +53,7 @@ Copyright Notice
 
 
 
-
-Newton                    Expires June 10, 2017                 [Page 1]
+Newton & Sanz             Expires June 18, 2017                 [Page 1]
 
 Internet-Draft          RDAP Domain Availability           December 2016
 
@@ -65,27 +65,27 @@ Internet-Draft          RDAP Domain Availability           December 2016
    registration, without proper signalling an RDAP server is likely to
    return more information than is required to fulfill this requirement,
    thus wasting bandwidth and server resources, and may return negative
-   answers when postive answers are more appropriate.
+   answers when positive answers are more appropriate.
 
-   This document defines a HTTP query parameters to be used by clients
-   to signal the intent of the query is for an availability check.
-   Servers may then respond with a much smaller and less costly payload
-   than they would have otherwise.  The contents of the payload would be
-   at the descretion of the policies of the server operator within the
+   This document defines HTTP query parameters to be used by clients to
+   signal the intent of the query is for an availability check.  Servers
+   may then respond with a much smaller and less costly payload than
+   they would have otherwise.  The contents of the payload would be at
+   the discretion of the policies of the server operator within the
    guidelines of RDAP responses [RFC7483].
 
 2.  Query Parameter
 
    To signal that the client is only interested in domain availability
-   information, the client MUST use the query paramter
-   'availabilityCheck' in the RDAP query for a domain.  This query
-   parameter has no meaning for other RDAP queries, and therefore should
-   be ignored.
+   checking, the client MUST use the query parameter 'availabilityCheck'
+   in the RDAP query for a domain with value '1'.  This query parameter
+   has no meaning for other RDAP queries, and therefore should be
+   ignored in those cases.
 
      The following is an example RDAP query for a domain availability
                                   check.
 
-       https://example.com/rdap/domain/example.com?availabilityCheck
+      https://example.com/rdap/domain/example.com?availabilityCheck=1
 
                        Figure 1: Example RDAP Query
 
@@ -99,17 +99,17 @@ Internet-Draft          RDAP Domain Availability           December 2016
         }
 
 
-       This response, not including the HTTP headers, is 174 octets.
+    This response, not including the HTTP headers, is 174 octets long.
 
                       Figure 2: Example RDAP Response
 
-   When this query paramter is given, severs MUST reply with HTTP return
-   codes as specified in Section 3.
+   When this query parameter is given, servers MUST reply with HTTP
+   return codes as specified in Section 3.
 
 
 
 
-Newton                    Expires June 10, 2017                 [Page 2]
+Newton & Sanz             Expires June 18, 2017                 [Page 2]
 
 Internet-Draft          RDAP Domain Availability           December 2016
 
@@ -129,19 +129,19 @@ Internet-Draft          RDAP Domain Availability           December 2016
    context.
 
    In the context of domain availability, RDAP servers should return
-   positive answers in accordance with server policies for rate limiting
-   and access control if the domain registry for which the RDAP server
-   is responding allows registration of the queried domain even if the
-   domain is currently registered at the time of the query.  For
-   example, an RDAP server answering for foo.example would return a
+   positive answers (in accordance with server policies for rate
+   limiting and access control) if the domain registry for which the
+   RDAP server is responding allows registration of the queried domain
+   even if the domain is currently registered at the time of the query.
+   For example, an RDAP server answering for foo.example would return a
    positive answer (i.e. 200 OK) for fiz.foo.example if the domain
    status was active or inactive, but it would return a negative answer
    for buzz.bar.example because it is not the registry for bar.example.
 
-   The example in shows a positive answer for a domain that is inactive
-    (i.e. not registered).  This example shows a positive answer for a
-    domain that is active, including variants and the expiration date.
-                                (Figure 2)
+   The example in Figure 2 shows a positive answer for a domain that is
+   inactive (i.e. not registered).  This example shows a positive answer
+    for a domain that is active, including variants and the expiration
+                                   date.
 
 
 
@@ -165,7 +165,7 @@ Internet-Draft          RDAP Domain Availability           December 2016
 
 
 
-Newton                    Expires June 10, 2017                 [Page 3]
+Newton & Sanz             Expires June 18, 2017                 [Page 3]
 
 Internet-Draft          RDAP Domain Availability           December 2016
 
@@ -188,7 +188,7 @@ Internet-Draft          RDAP Domain Availability           December 2016
              },
              {
                "ldhName" : "xn--fo-fka.example",
-               "unicodeName" : "foo.example"
+               "unicodeName" : "foeo.example"
              }
            ]
          },
@@ -208,20 +208,20 @@ Internet-Draft          RDAP Domain Availability           December 2016
        [
          {
            "eventAction" : "expiration",
-           "eventDate" : "2019-12-31T23:59:59Z",
+           "eventDate" : "2019-12-31T23:59:59Z"
          }
        ]
      }
 
 
-       This response, not including the HTTP headers, is 904 octets.
+   This response, not including the HTTP headers, is 908 octets long in
+                              UTF-8 encoding.
 
                      Figure 3: Example Positive Answer
 
 
 
-
-Newton                    Expires June 10, 2017                 [Page 4]
+Newton & Sanz             Expires June 18, 2017                 [Page 4]
 
 Internet-Draft          RDAP Domain Availability           December 2016
 
@@ -234,11 +234,11 @@ Internet-Draft          RDAP Domain Availability           December 2016
    RDAP data model.  Some clients may desire both domain registration
    information and domain availability information.  To signal that the
    client is interested in both contexts, the client MUST use the query
-   paramter 'availabilityInformation' in the RDAP query for a domain.
-   This query parameter has no meaning for other RDAP queries, and
-   therefore should be ignored.
+   parameter 'availabilityInformation' in the RDAP query for a domain
+   with value '1'.  This query parameter has no meaning for other RDAP
+   queries, and therefore should be ignored in those cases.
 
-   Severs MUST respond with positive answers as specified in Section 3,
+   Servers MUST respond with positive answers as specified in Section 3,
    but SHOULD NOT redact other registration information (i.e. entities,
    name servers, etc...) in accordance with their access policies.
 
@@ -253,16 +253,16 @@ Internet-Draft          RDAP Domain Availability           December 2016
 6.  Normative References
 
    [RFC7480]  Newton, A., Ellacott, B., and N. Kong, "HTTP Usage in the
-              Registration Data Access Protocol (RDAP)", RFC 7480, DOI
-              10.17487/RFC7480, March 2015,
+              Registration Data Access Protocol (RDAP)", RFC 7480,
+              DOI 10.17487/RFC7480, March 2015,
               <http://www.rfc-editor.org/info/rfc7480>.
 
    [RFC7483]  Newton, A. and S. Hollenbeck, "JSON Responses for the
-              Registration Data Access Protocol (RDAP)", RFC 7483, DOI
-              10.17487/RFC7483, March 2015,
+              Registration Data Access Protocol (RDAP)", RFC 7483,
+              DOI 10.17487/RFC7483, March 2015,
               <http://www.rfc-editor.org/info/rfc7483>.
 
-Author's Address
+Authors' Addresses
 
    Andrew Lee Newton
    American Registry for Internet Numbers
@@ -277,4 +277,60 @@ Author's Address
 
 
 
-Newton                    Expires June 10, 2017                 [Page 5]
+Newton & Sanz             Expires June 18, 2017                 [Page 5]
+
+Internet-Draft          RDAP Domain Availability           December 2016
+
+
+   Marcos Sanz
+   DENIC eG
+   Kaiserstrasse 75 - 77
+   Frankfurt am Main  60329
+   Germany
+
+   Email: sanz@denic.de
+   URI:   https://www.denic.de
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Newton & Sanz             Expires June 18, 2017                 [Page 6]
