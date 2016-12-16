@@ -5,8 +5,7 @@
    'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7480.xml'>
 <!ENTITY RFC7483 PUBLIC ''
    'http://xml.resource.org/public/rfc/bibxml/reference.RFC.7483.xml'>
-<!ENTITY domain_check.json PUBLIC '' 'domain_check.json' >
-<!ENTITY variant_domain.json PUBLIC '' 'variant_domain.json' >
+
 ]>
 <?rfc toc="true"?>
 <rfc category="info" docName="draft-newton-regext-rdap-domain-availability-00" ipr="trust200902">
@@ -77,7 +76,13 @@
             </figure>
             <figure align="center" title="Example RDAP Response" anchor="domain_check.json">
                 <preamble>The following is an example response.</preamble>
-                <artwork xml:space="preserve" align="center">&domain_check.json;
+                <artwork xml:space="preserve" align="center">
+{
+  "rdapConformance" : [ "rdap_level_0", "domain_check_0" ],
+  "objectClassName" : "domain",
+  "ldhName" : "example.com",
+  "status" : [ "inactive", "redemption period" ]
+}
                 </artwork>
                 <postamble>This response, not including the HTTP headers, is 174 octets long.</postamble>
             </figure>
@@ -109,7 +114,49 @@
                 <preamble>The example in <xref target="domain_check.json"></xref> shows a positive answer for
                 a domain that is inactive (i.e. not registered). This example shows a positive answer for
                 a domain that is active, including variants and the expiration date.</preamble>
-                <artwork xml:space="preserve" align="center">&variant_domain.json;
+                <artwork xml:space="preserve" align="center">
+{
+  "rdapConformance" : [ "rdap_level_0", "domain_check_0" ],
+  "objectClassName" : "domain",
+  "handle" : "XXXX",
+  "ldhName" : "xn--fo-5ja.example",
+  "unicodeName" : "f√≥o.example",
+  "variants" :
+  [
+    {
+      "relation" : [ "registered", "conjoined" ],
+      "variantNames" :
+      [
+        {
+          "ldhName" : "xn--fo-cka.example",
+          "unicodeName" : "f√µo.example"
+        },
+        {
+          "ldhName" : "xn--fo-fka.example",
+          "unicodeName" : "f√∂o.example"
+        }
+      ]
+    },
+    {
+      "relation" : [ "unregistered", "registration restricted" ],
+      "variantNames" :
+      [
+        {
+          "ldhName": "xn--fo-8ja.example",
+          "unicodeName" : "f√¥o.example"
+        }
+      ]
+    }
+  ],
+  "status" : [ "active", "transfer prohibited" ],
+  "events" :
+  [
+    {
+      "eventAction" : "expiration",
+      "eventDate" : "2019-12-31T23:59:59Z"
+    }
+  ]
+}
                 </artwork>
                 <postamble>This response, not including the HTTP headers, is 908 octets long in UTF-8 encoding.</postamble>
             </figure>

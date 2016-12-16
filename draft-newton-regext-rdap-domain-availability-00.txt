@@ -98,13 +98,13 @@ Internet-Draft          RDAP Domain Availability           December 2016
           "status" : [ "inactive", "redemption period" ]
         }
 
-
     This response, not including the HTTP headers, is 174 octets long.
 
                       Figure 2: Example RDAP Response
 
    When this query parameter is given, servers MUST reply with HTTP
    return codes as specified in Section 3.
+
 
 
 
@@ -175,7 +175,7 @@ Internet-Draft          RDAP Domain Availability           December 2016
        "objectClassName" : "domain",
        "handle" : "XXXX",
        "ldhName" : "xn--fo-5ja.example",
-       "unicodeName" : "foo.example",
+       "unicodeName" : "f&#8730;>=o.example",
        "variants" :
        [
          {
@@ -184,11 +184,11 @@ Internet-Draft          RDAP Domain Availability           December 2016
            [
              {
                "ldhName" : "xn--fo-cka.example",
-               "unicodeName" : "foo.example"
+               "unicodeName" : "f&#8730;[micro]o.example"
              },
              {
                "ldhName" : "xn--fo-fka.example",
-               "unicodeName" : "foeo.example"
+               "unicodeName" : "f&#8730;&#8706;o.example"
              }
            ]
          },
@@ -198,7 +198,7 @@ Internet-Draft          RDAP Domain Availability           December 2016
            [
              {
                "ldhName": "xn--fo-8ja.example",
-               "unicodeName" : "foo.example"
+               "unicodeName" : "f&#8730;JPYo.example"
              }
            ]
          }
@@ -213,11 +213,11 @@ Internet-Draft          RDAP Domain Availability           December 2016
        ]
      }
 
-
    This response, not including the HTTP headers, is 908 octets long in
                               UTF-8 encoding.
 
                      Figure 3: Example Positive Answer
+
 
 
 
@@ -253,13 +253,13 @@ Internet-Draft          RDAP Domain Availability           December 2016
 6.  Normative References
 
    [RFC7480]  Newton, A., Ellacott, B., and N. Kong, "HTTP Usage in the
-              Registration Data Access Protocol (RDAP)", RFC 7480,
-              DOI 10.17487/RFC7480, March 2015,
+              Registration Data Access Protocol (RDAP)", RFC 7480, DOI
+              10.17487/RFC7480, March 2015,
               <http://www.rfc-editor.org/info/rfc7480>.
 
    [RFC7483]  Newton, A. and S. Hollenbeck, "JSON Responses for the
-              Registration Data Access Protocol (RDAP)", RFC 7483,
-              DOI 10.17487/RFC7483, March 2015,
+              Registration Data Access Protocol (RDAP)", RFC 7483, DOI
+              10.17487/RFC7483, March 2015,
               <http://www.rfc-editor.org/info/rfc7483>.
 
 Authors' Addresses
