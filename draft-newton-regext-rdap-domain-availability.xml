@@ -92,7 +92,7 @@
                 contextual for the lookup of domain registration information than domain availability information.
                 A query for domain registration information should result in a negative answer (e.g. 404 NOT FOUND) if
                 the name is not registered (or not in active use or in another state where it may be considered to
-                have a unregistration acording to policy). However, a query for domain availability information
+                have a unregistration according to policy). However, a query for domain availability information
                 upon the same domain name should yield a positive answer if the domain is available for registration
                 within the bounds of the registry policy.
                 In other words, the return codes may vary given the appropriate context.
